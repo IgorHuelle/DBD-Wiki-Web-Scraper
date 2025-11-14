@@ -1,0 +1,20 @@
+{
+  "name": "dbd-wiki-scraper",
+  "version": "1.0.0",
+  "description": "none",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "web scraper",
+    "javascript",
+    "web app"
+  ],
+  "author": "igor huelle",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.12.2",
+    "jsdom": "^27.0.0"
+  }
+}
