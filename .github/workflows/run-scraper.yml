@@ -25,7 +25,7 @@ jobs:
         - name: Install lftp
           run: sudo apt-get update && sudo apt-get install -y lftp
 
-        - name: Upload data via FTP
+        - name: Upload wiki_scrape.json via FTP
           env:
             FTP_HOST: ${{ secrets.FTP_SERVER }}
             FTP_USER: ${{ secrets.FTP_USERNAME }}
@@ -33,7 +33,9 @@ jobs:
           run: |
             lftp -e "
               set ssl:verify-certificate false;
+              open -u \"$FTP_USER\",\"$FTP_PASS\" $FTP_HOST;
               cd /public_html/api/;
               put wiki_scrape.json;
               bye
-            " -u "$FTP_USER","$FTP_PASS" "$FTP_HOST"
+            "
+
