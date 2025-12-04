@@ -32,10 +32,10 @@ jobs:
             FTP_PASS: ${{ secrets.FTP_PASSWORD }}
           run: |
             lftp -e "
+              set ftp:ssl-force true;
               set ssl:verify-certificate false;
               open -u \"$FTP_USER\",\"$FTP_PASS\" $FTP_HOST;
               cd /public_html/api/;
               put wiki_scrape.json;
               bye
             "
-
