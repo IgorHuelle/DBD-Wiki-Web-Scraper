@@ -22,14 +22,18 @@ jobs:
         - name: Run scraper
           run: node main.js
 
-        - name: Upload to FTP
-          uses: SamKirkland/FTP-Deploy-Action@v4
-          with:
-            server: ${{ secrets.FTP_SERVER }}
-            username: ${{ secrets.FTP_USERNAME }}
-            password: ${{ secrets.FTP_PASSWORD }}
-            server-dir: /public_html/api/
-            local-dir: ./
-            exclude: |
-              **/*
-              !output.json
+        - name: Install lftp
+          run: sudo apt-get update && sudo apt-get install -y lftp
+
+        - name: Upload data via FTP
+          env:
+            FTP_HOST: ${{ secrets.FTP_SERVER }}
+            FTP_USER: ${{ secrets.FTP_USERNAME }}
+            FTP_PASS: ${{ secrets.FTP_PASSWORD }}
+          run: |
+            lftp -e "
+              set ssl:verify-certificate false;
+              cd /public_html/api/;
+              put wiki_scrape.json;
+              bye
+            " -u "$FTP_USER","$FTP_PASS" "$FTP_HOST"
