@@ -23,7 +23,7 @@ jobs:
           run: node main.js
 
         - name: Upload to FTP
-          uses: SamKirkland/FTP-Deploy-Action@v4
+          uses: SamKirkland/FTP-Deploy-Action@v2.1.0
           with:
             server: ${{ secrets.FTP_SERVER }}
             username: ${{ secrets.FTP_USERNAME }}
