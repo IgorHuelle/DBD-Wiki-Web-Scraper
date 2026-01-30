@@ -32,7 +32,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
           local-dir: ./
-          server-dir: public_html/
+          server-dir: ./
           state-name: .ftp-deploy-sync-state.json
           # We only want to upload the scrape result
           exclude: |
