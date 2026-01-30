@@ -1,41 +1,40 @@
-name: Run Scraper
+name: Run Scraper and Upload to FTP
 
 on:
-    workflow_dispatch:
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+  repository_dispatch:
+    types: [run-scraper] # Allows remote trigger via API
 
 jobs:
-    run-scraper:
-        runs-on: ubuntu-latest
+  scrape-and-upload:
+    runs-on: ubuntu-latest
 
-        steps:
-        - name: Checkout repo
-          uses: actions/checkout@v4
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-        - name: Setup Node
-          uses: actions/setup-node@v4
-          with:
-            node-version: 22
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-        - name: Install dependencies
-          run: npm install
+      - name: Install dependencies
+        run: npm ci
 
-        - name: Run scraper
-          run: node main.js
+      - name: Run Scraper
+        run: node main.js
 
-        - name: Install lftp
-          run: sudo apt-get update && sudo apt-get install -y lftp
-
-        - name: Upload wiki_scrape.json via FTP
-          env:
-            FTP_HOST: ${{ secrets.FTP_SERVER }}
-            FTP_USER: ${{ secrets.FTP_USERNAME }}
-            FTP_PASS: ${{ secrets.FTP_PASSWORD }}
-          run: |
-            lftp -e "
-              set ftp:ssl-force true;
-              set ssl:verify-certificate false;
-              open -u \"$FTP_USER\",\"$FTP_PASS\" $FTP_HOST;
-              cd /public_html/api/;
-              put wiki_scrape.json;
-              bye
-            "
+      - name: Upload to FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: 82.25.96.203
+          username: u562040443
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          local-dir: ./
+          server-dir: public_html/
+          state-name: .ftp-deploy-sync-state.json
+          # We only want to upload the scrape result
+          exclude: |
+            **
+            !wiki_scrape.json

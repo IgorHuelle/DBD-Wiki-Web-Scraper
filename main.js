@@ -36,7 +36,7 @@ function getCharacter(elm) {
     const elmClone = elm.cloneNode(true);
 
     const charName = elmClone.querySelector("a")?.title || "Bloodweb";
-    const charImg  = elmClone.querySelector("img")?.src;
+    const charImg = elmClone.querySelector("img")?.src;
 
     return { charName, charImg };
 }
@@ -44,8 +44,8 @@ function getCharacter(elm) {
 // ASYNCS
 async function getScrapeFromUrl(url) {
     const stuff = await axios.get(url);
-	const dom = new JSDOM(stuff.data);
-	const { document } = dom.window;
+    const dom = new JSDOM(stuff.data);
+    const { document } = dom.window;
 
     return document;
 }
@@ -62,11 +62,11 @@ async function parseCharacters() {
         const portraits = [...doc.querySelector('div[style*="color: #fff;"]').children];
 
         for (const portrait of portraits) {
-            
+
             const charImgUrl = portrait.querySelector("img")?.src;
-            const fullName   = portrait.querySelector(".charPortraitImage a")?.title
+            const fullName = portrait.querySelector(".charPortraitImage a")?.title
             // if (!charImgUrl || !fullName) { console.log("[x] - Portrait missing url or name"); continue }
-            const charName   = type === "killers" ? (fullName).replace(/^The\s+/, '') : fullName; // 'The '...
+            const charName = type === "killers" ? (fullName).replace(/^The\s+/, '') : fullName; // 'The '...
 
             characters[type][charName] = {
                 portrait: BASE_LINK + charImgUrl
@@ -87,16 +87,16 @@ async function parsePerks() {
     Object.entries(scrapes).forEach(([type, doc]) => {
         const rows = [...doc.querySelector('tbody').children];
 
-            // 0 - Icon
-            // 1 - Name
-            // 2 - Description
-            // 3 - Portrait
+        // 0 - Icon
+        // 1 - Name
+        // 2 - Description
+        // 3 - Portrait
 
         for (const row of rows) {
-            
+
             const { perkImgUrl, perkName } = getImageUrl(row.children[0]);
-            const { charName, charImg }    = getCharacter(row.children[3]);
-            const perkDesc                 = getDescription(row.children[2]);
+            const { charName, charImg } = getCharacter(row.children[3]);
+            const perkDesc = getDescription(row.children[2]);
 
             if (!perkName) continue;
 
@@ -113,7 +113,7 @@ async function parsePerks() {
 async function parseWikiData() {
     const characters = await parseCharacters();
     const perks = await parsePerks();
-	return { characters, perks };
+    return { characters, perks };
 }
 
 async function init() {
@@ -121,7 +121,7 @@ async function init() {
 
     const data = await parseWikiData();
 
-	const jsonStruct = {
+    const jsonStruct = {
         perks: {
             killers: data["perks"]["killers"],
             survivors: data["perks"]["survivors"]
@@ -142,12 +142,15 @@ async function init() {
         },
         other: {
             updateDateUNIX: Math.floor(Date.now() / 1000), // to return UNIX
+            universalKiller: {
+                portrait: "assets/images/Unknown_Character.webp"
+            },
             allSurvivors: data["characters"]["survivors"]
         }
-	}
+    }
 
     const jsonName = "wiki_scrape.json";
-	fs.writeFileSync(jsonName, JSON.stringify(jsonStruct, null, '\t'));
+    fs.writeFileSync(jsonName, JSON.stringify(jsonStruct, null, '\t'));
     console.log(`DATA SAVED: Exported to ${jsonName}`);
 };
 init().catch(console.error);
