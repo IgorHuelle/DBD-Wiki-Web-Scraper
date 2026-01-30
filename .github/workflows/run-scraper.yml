@@ -28,7 +28,7 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: 82.25.96.203
-          username: u562040443
+          username: u562040443.scraper
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
           local-dir: ./
