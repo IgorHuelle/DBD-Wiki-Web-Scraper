@@ -143,7 +143,7 @@ async function init() {
         other: {
             updateDateUNIX: Math.floor(Date.now() / 1000), // to return UNIX
             universalKiller: {
-                portrait: "assets/images/Unknown_Character.webp"
+                portrait: "assets/images/genericbuild1.png"
             },
             allSurvivors: data["characters"]["survivors"]
         }
