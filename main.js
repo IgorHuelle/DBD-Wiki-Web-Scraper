@@ -132,7 +132,7 @@ async function init() {
                 "Solo Survivor": {
                     portrait: "assets/images/survivor_portraits/S01_Solo_Portrait.webp"
                 },
-                "Solo Advanced": {
+                "Advanced Builds": {
                     portrait: "assets/images/survivor_portraits/S02_SoloAdvanced_Portrait.webp"
                 },
                 "Team Player": {
